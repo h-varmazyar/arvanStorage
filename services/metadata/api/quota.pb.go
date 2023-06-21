@@ -26,15 +26,15 @@ type Quota struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// @inject_tag: json:"id"
+	//	@inject_tag:	json:"id"
 	ID string `protobuf:"bytes,1,opt,name=ID,proto3" json:"id"`
-	// @inject_tag: json:"user_id"
+	//	@inject_tag:	json:"user_id"
 	UserID string `protobuf:"bytes,2,opt,name=UserID,proto3" json:"user_id"`
-	// @inject_tag: json:"max_request_per_minute"
+	//	@inject_tag:	json:"max_request_per_minute"
 	MaxRequestPerMinute int64 `protobuf:"varint,3,opt,name=MaxRequestPerMinute,proto3" json:"max_request_per_minute"`
-	// @inject_tag: json:"max_volume_in_month"
+	//	@inject_tag:	json:"max_volume_in_month"
 	MaxVolumeInMonth int64 `protobuf:"varint,4,opt,name=MaxVolumeInMonth,proto3" json:"max_volume_in_month"`
-	// @inject_tag: json:"total_used_volume"
+	//	@inject_tag:	json:"total_used_volume"
 	TotalUsedVolume int64 `protobuf:"varint,5,opt,name=TotalUsedVolume,proto3" json:"total_used_volume"`
 }
 
@@ -110,7 +110,7 @@ type QuotaRemainingReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// @inject_tag: json:"account_id"
+	//	@inject_tag:	json:"account_id"
 	UserID string `protobuf:"bytes,1,opt,name=UserID,proto3" json:"account_id"`
 }
 
@@ -158,7 +158,7 @@ type QuotaRemainingResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// @inject_tag: json:"total_remaining_volume"
+	//	@inject_tag:	json:"total_remaining_volume"
 	TotalRemainingVolume int64 `protobuf:"varint,1,opt,name=TotalRemainingVolume,proto3" json:"total_remaining_volume"`
 }
 
@@ -206,9 +206,9 @@ type Volume struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// @inject_tag: json:"account_id"
+	//	@inject_tag:	json:"account_id"
 	UserID string `protobuf:"bytes,1,opt,name=UserID,proto3" json:"account_id"`
-	// @inject_tag: json:"volume"
+	//	@inject_tag:	json:"volume"
 	Volume int64 `protobuf:"varint,2,opt,name=Volume,proto3" json:"volume"`
 }
 

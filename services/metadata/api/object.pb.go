@@ -26,15 +26,15 @@ type Object struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// @inject_tag: json:"id"
+	//	@inject_tag:	json:"id"
 	ID string `protobuf:"bytes,1,opt,name=ID,proto3" json:"id"`
-	// @inject_tag: json:"key"
+	//	@inject_tag:	json:"key"
 	Key string `protobuf:"bytes,2,opt,name=Key,proto3" json:"key"`
-	// @inject_tag: json:"user_id"
+	//	@inject_tag:	json:"user_id"
 	UserID string `protobuf:"bytes,3,opt,name=UserID,proto3" json:"user_id"`
-	// @inject_tag: json:checksum"
+	//	@inject_tag:	json:checksum"
 	Checksum string `protobuf:"bytes,4,opt,name=Checksum,proto3" json:"Checksum,omitempty"`
-	// @inject_tag: json:"size"
+	//	@inject_tag:	json:"size"
 	Size int64 `protobuf:"varint,5,opt,name=Size,proto3" json:"size"`
 }
 
@@ -110,7 +110,7 @@ type Objects struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// @inject_tag: json:elements"
+	//	@inject_tag:	json:elements"
 	Elements []*Object `protobuf:"bytes,1,rep,name=Elements,proto3" json:"Elements,omitempty"`
 }
 
@@ -272,9 +272,9 @@ type ObjectNewUploadReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// @inject_tag: json:"key"
+	//	@inject_tag:	json:"key"
 	Key string `protobuf:"bytes,1,opt,name=Key,proto3" json:"key"`
-	// @inject_tag: json:"user_id"
+	//	@inject_tag:	json:"user_id"
 	UserID string `protobuf:"bytes,2,opt,name=UserID,proto3" json:"user_id"`
 }
 
@@ -329,7 +329,7 @@ type ObjectNewUploadResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// @inject_tag: json:"upload_id"
+	//	@inject_tag:	json:"upload_id"
 	UploadID string `protobuf:"bytes,1,opt,name=UploadID,proto3" json:"upload_id"`
 }
 
@@ -377,13 +377,13 @@ type ObjectUploadPartReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// @inject_tag: json:"key"
+	//	@inject_tag:	json:"key"
 	Key string `protobuf:"bytes,1,opt,name=Key,proto3" json:"key"`
-	// @inject_tag: json:"user_id"
+	//	@inject_tag:	json:"user_id"
 	UserID string `protobuf:"bytes,2,opt,name=UserID,proto3" json:"user_id"`
-	// @inject_tag: json:"upload_id"
+	//	@inject_tag:	json:"upload_id"
 	UploadID string `protobuf:"bytes,3,opt,name=UploadID,proto3" json:"upload_id"`
-	// @inject_tag: json:"body"
+	//	@inject_tag:	json:"body"
 	Body string `protobuf:"bytes,4,opt,name=Body,proto3" json:"body"`
 }
 
@@ -452,9 +452,9 @@ type ObjectCompleteUploadReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// @inject_tag: json:"user_id"
+	//	@inject_tag:	json:"user_id"
 	UserID string `protobuf:"bytes,1,opt,name=UserID,proto3" json:"user_id"`
-	// @inject_tag: json:"upload_id"
+	//	@inject_tag:	json:"upload_id"
 	UploadID string `protobuf:"bytes,2,opt,name=UploadID,proto3" json:"upload_id"`
 }
 
@@ -509,7 +509,7 @@ type ObjectAbortUploadReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// @inject_tag: json:"upload_id"
+	//	@inject_tag:	json:"upload_id"
 	UploadID string `protobuf:"bytes,1,opt,name=UploadID,proto3" json:"upload_id"`
 }
 
