@@ -1,0 +1,73 @@
+syntax = "proto3";
+package api;
+option go_package = "github.com/h-varmazyar/arvanStorage/services/metadata/api";
+import "api/src/misc.proto";
+
+service ObjectService {
+  rpc List(ObjectListReq) returns (Objects);
+  rpc Return(ObjectReturnReq) returns (Object);
+  rpc Delete(ObjectDeleteReq) returns (api.Void);
+  rpc NewUpload(ObjectNewUploadReq) returns (ObjectNewUploadResp);
+  rpc UploadPart(ObjectUploadPartReq) returns (api.Void);
+  rpc CompleteUpload(ObjectCompleteUploadReq) returns (api.Void);
+  rpc AbortUpload(ObjectAbortUploadReq) returns (api.Void);
+}
+
+message Object {
+  // @inject_tag: json:"id"
+  string ID = 1;
+  // @inject_tag: json:"key"
+  string Key = 2;
+  // @inject_tag: json:"user_id"
+  string UserID = 3;
+  // @inject_tag: json:checksum"
+  string Checksum = 4;
+  // @inject_tag: json:"size"
+  int64 Size = 5;
+}
+
+message Objects{
+  // @inject_tag: json:elements"
+  repeated Object Elements = 1;
+}
+
+message ObjectListReq{}
+
+message ObjectReturnReq{}
+
+message ObjectDeleteReq{}
+
+message ObjectNewUploadReq{
+  // @inject_tag: json:"key"
+  string Key = 1;
+  // @inject_tag: json:"user_id"
+  string UserID = 2;
+}
+
+message ObjectNewUploadResp{
+  // @inject_tag: json:"upload_id"
+  string UploadID = 1;
+}
+
+message ObjectUploadPartReq{
+  // @inject_tag: json:"key"
+  string Key = 1;
+  // @inject_tag: json:"user_id"
+  string UserID = 2;
+  // @inject_tag: json:"upload_id"
+  string UploadID = 3;
+  // @inject_tag: json:"body"
+  string Body = 4;
+}
+
+message ObjectCompleteUploadReq{
+  // @inject_tag: json:"user_id"
+  string UserID = 1;
+  // @inject_tag: json:"upload_id"
+  string UploadID = 2;
+}
+
+message ObjectAbortUploadReq{
+  // @inject_tag: json:"upload_id"
+  string UploadID = 1;
+}
