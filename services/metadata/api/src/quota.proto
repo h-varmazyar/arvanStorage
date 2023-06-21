@@ -1,0 +1,39 @@
+syntax = "proto3";
+package api;
+option go_package = "github.com/h-varmazyar/arvanStorage/services/metadata/api";
+import "api/src/misc.proto";
+
+service QuotaService {
+  rpc Remaining(QuotaRemainingReq) returns (QuotaRemainingResp);
+  rpc UpdateUsedVolume(Volume) returns (api.Void);
+}
+
+message Quota {
+  // @inject_tag: json:"id"
+  string ID = 1;
+  // @inject_tag: json:"user_id"
+  string UserID = 2;
+  // @inject_tag: json:"max_request_per_minute"
+  int64 MaxRequestPerMinute = 3;
+  // @inject_tag: json:"max_volume_in_month"
+  int64 MaxVolumeInMonth = 4;
+  // @inject_tag: json:"total_used_volume"
+  int64 TotalUsedVolume = 5;
+}
+
+message QuotaRemainingReq{
+  // @inject_tag: json:"account_id"
+  string UserID = 1;
+}
+
+message QuotaRemainingResp{
+  // @inject_tag: json:"total_remaining_volume"
+  int64 TotalRemainingVolume = 1;
+}
+
+message Volume{
+  // @inject_tag: json:"account_id"
+  string UserID = 1;
+  // @inject_tag: json:"volume"
+  int64 Volume = 2;
+}
