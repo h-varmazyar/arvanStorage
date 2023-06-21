@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/h-varmazyar/arvanStorage/services/metadata/internal/app/quota/repository"
 	"github.com/h-varmazyar/arvanStorage/services/metadata/internal/app/quota/service"
+	"github.com/h-varmazyar/arvanStorage/services/metadata/internal/app/quota/worker"
 	"github.com/h-varmazyar/arvanStorage/services/metadata/internal/pkg/db"
 	log "github.com/sirupsen/logrus"
 )
@@ -17,6 +18,11 @@ func NewApp(ctx context.Context, logger *log.Logger, db *db.DB) (*App, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	if err = worker.NewResetQuotaWorker(logger, dbInstance).Start(); err != nil {
+		return nil, err
+	}
+
 	return &App{
 		Service: service.NewService(ctx, logger, dbInstance),
 	}, nil

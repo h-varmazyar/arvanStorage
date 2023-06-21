@@ -19,6 +19,7 @@ type Quota struct {
 type Repository interface {
 	ReturnByUserID(ctx context.Context, userID uuid.UUID) (*Quota, error)
 	UpdateUsedVolume(ctx context.Context, quotaID uuid.UUID, volume int64) error
+	ResetAllQuota(ctx context.Context) error
 }
 
 func NewRepository(ctx context.Context, logger *log.Logger, db *db.DB) (Repository, error) {

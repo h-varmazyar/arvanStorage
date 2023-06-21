@@ -38,3 +38,10 @@ func (r *quotaPostgresRepository) UpdateUsedVolume(_ context.Context, quotaID uu
 	}
 	return nil
 }
+
+func (r *quotaPostgresRepository) ResetAllQuota(_ context.Context) error {
+	if err := r.db.Model(new(Quota)).Where("total_used_volume != 0").Update("total_used_volume", 0).Error; err != nil {
+		return err
+	}
+	return nil
+}
