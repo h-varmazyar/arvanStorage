@@ -19,6 +19,7 @@ type Object struct {
 type Repository interface {
 	Save(ctx context.Context, object *Object) error
 	ReturnByKey(ctx context.Context, key string) (*Object, error)
+	TotalMonthlyVolume(ctx context.Context, userID uuid.UUID) (int64, error)
 }
 
 func NewRepository(ctx context.Context, logger *log.Logger, db *db.DB) (Repository, error) {

@@ -156,6 +156,10 @@ func (s *Service) CompleteUpload(ctx context.Context, req *metadataApi.ObjectCom
 		s.fileCache.AsyncPersistToStorage(uploadID)
 	}
 
+	if err = s.updateVolumeQuota(ctx, userID); err != nil {
+		return nil, err
+	}
+
 	if err = s.db.Save(ctx, object); err != nil {
 		return nil, err
 	}
