@@ -26,11 +26,13 @@ var (
 	GrpcService *Service
 )
 
-func NewService(_ context.Context, logger *log.Logger, db repository.Repository) *Service {
+func NewService(_ context.Context, logger *log.Logger, db repository.Repository, quotaService *quota.Service, fileCache fileCache.Caching) *Service {
 	if GrpcService == nil {
 		GrpcService = new(Service)
 		GrpcService.logger = logger
 		GrpcService.db = db
+		GrpcService.quotaService = quotaService
+		GrpcService.fileCache = fileCache
 	}
 	return GrpcService
 }
@@ -39,15 +41,15 @@ func (s *Service) RegisterServer(server *grpc.Server) {
 	metadataApi.RegisterObjectServiceServer(server, s)
 }
 
-func (s *Service) List(ctx context.Context, req *metadataApi.ObjectListReq) (*metadataApi.Objects, error) {
+func (s *Service) List(ctx context.Context, _ *metadataApi.ObjectListReq) (*metadataApi.Objects, error) {
 	return nil, errors.New(ctx, codes.Unimplemented)
 }
 
-func (s *Service) Return(ctx context.Context, req *metadataApi.ObjectReturnReq) (*metadataApi.Object, error) {
+func (s *Service) Return(ctx context.Context, _ *metadataApi.ObjectReturnReq) (*metadataApi.Object, error) {
 	return nil, errors.New(ctx, codes.Unimplemented)
 }
 
-func (s *Service) Delete(ctx context.Context, req *metadataApi.ObjectDeleteReq) (*api.Void, error) {
+func (s *Service) Delete(ctx context.Context, _ *metadataApi.ObjectDeleteReq) (*api.Void, error) {
 	return nil, errors.New(ctx, codes.Unimplemented)
 }
 
@@ -70,7 +72,7 @@ func (s *Service) NewUpload(ctx context.Context, req *metadataApi.ObjectNewUploa
 	}
 
 	uploadID := uuid.New()
-	//todo: use in cache
+	s.fileCache.NewFile(uploadID)
 
 	return &metadataApi.ObjectNewUploadResp{UploadID: uploadID.String()}, nil
 }

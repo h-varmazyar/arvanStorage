@@ -18,6 +18,7 @@ type FileInfo struct {
 type Caching interface {
 	ReturnFileInfo(id uuid.UUID) (*FileInfo, error)
 	FileChecksum(id uuid.UUID) string
+	NewFile(id uuid.UUID)
 	AddPart(id uuid.UUID, bytes []byte) error
 	AsyncPersistToStorage(id uuid.UUID)
 	RemoveFile(id uuid.UUID) error
