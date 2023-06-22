@@ -11,7 +11,7 @@ import (
 type Quota struct {
 	gormext.UniversalModel
 	UserID              uuid.UUID
-	MaxRequestPerMinute int
+	MaxRequestPerMinute int64
 	MaxVolumeInMonth    int64
 	TotalUsedVolume     int64
 }

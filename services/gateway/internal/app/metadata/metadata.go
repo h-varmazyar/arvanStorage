@@ -2,8 +2,8 @@ package metadata
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/h-varmazyar/arvanStorage/services/gateway/internal/metadata/object"
-	"github.com/h-varmazyar/arvanStorage/services/gateway/internal/metadata/quota"
+	"github.com/h-varmazyar/arvanStorage/services/gateway/internal/app/metadata/object"
+	"github.com/h-varmazyar/arvanStorage/services/gateway/internal/app/metadata/quota"
 	log "github.com/sirupsen/logrus"
 )
 

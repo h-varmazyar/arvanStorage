@@ -3,6 +3,7 @@ package object
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/h-varmazyar/arvanStorage/pkg/grpcext"
+	"github.com/h-varmazyar/arvanStorage/services/gateway/internal/pkg/ratelimiter"
 	metadataApi "github.com/h-varmazyar/arvanStorage/services/metadata/api"
 	log "github.com/sirupsen/logrus"
 	"net/http"
@@ -15,6 +16,7 @@ var (
 type Controller struct {
 	objectService metadataApi.ObjectServiceClient
 	logger        *log.Logger
+	limiter       *ratelimiter.Limiter
 	*gin.Engine
 }
 
@@ -25,6 +27,7 @@ func NewController(logger *log.Logger, engine *gin.Engine, metadataAddress strin
 			objectService: metadataApi.NewObjectServiceClient(metadataConn),
 			logger:        logger,
 			Engine:        engine,
+			limiter:       ratelimiter.NewLimiter(metadataAddress),
 		}
 	}
 	return controller
@@ -33,7 +36,7 @@ func NewController(logger *log.Logger, engine *gin.Engine, metadataAddress strin
 func (c *Controller) RegisterRoutes(router *gin.RouterGroup) {
 	objectsRouter := router.Group("/objects")
 	uploadRouter := objectsRouter.Group("/upload")
-	uploadRouter.POST("/", c.upload)
+	uploadRouter.Use(c.limiter.QuotaRateLimiter()).POST("/", c.upload)
 	uploadRouter.PUT("/:upload_id", c.part)
 	uploadRouter.POST("/:upload_id", c.complete)
 	uploadRouter.DELETE("/:upload_id", c.abort)

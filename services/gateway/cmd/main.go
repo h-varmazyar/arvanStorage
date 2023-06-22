@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/h-varmazyar/arvanStorage/services/gateway/configs"
 	"github.com/h-varmazyar/arvanStorage/services/gateway/docs"
-	"github.com/h-varmazyar/arvanStorage/services/gateway/internal/metadata"
+	"github.com/h-varmazyar/arvanStorage/services/gateway/internal/app/metadata"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	swaggerfiles "github.com/swaggo/files"

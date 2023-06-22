@@ -5,6 +5,7 @@ import "api/src/misc.proto";
 
 service QuotaService {
   rpc Remaining(QuotaRemainingReq) returns (QuotaRemainingResp);
+  rpc RequestLimit(QuotaRequestLimitReq) returns (QuotaRequestLimitResp);
   rpc UpdateUsedVolume(Volume) returns (api.Void);
 }
 
@@ -29,6 +30,18 @@ message QuotaRemainingReq{
 message QuotaRemainingResp{
   // @inject_tag: json:"total_remaining_volume"
   int64 TotalRemainingVolume = 1;
+}
+
+message QuotaRequestLimitReq{
+  // @inject_tag: json:"account_id"
+  string UserID = 1;
+}
+
+message QuotaRequestLimitResp{
+  // @inject_tag: json:"count"
+  int64 Count = 1;
+  // @inject_tag: json:"duration"
+  int64 Duration = 2;
 }
 
 message Volume{

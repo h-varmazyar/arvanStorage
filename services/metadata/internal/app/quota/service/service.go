@@ -10,6 +10,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"time"
 )
 
 type Service struct {
@@ -50,6 +51,27 @@ func (s *Service) Remaining(ctx context.Context, req *metadataApi.QuotaRemaining
 	}
 	resp = &metadataApi.QuotaRemainingResp{
 		TotalRemainingVolume: quota.MaxVolumeInMonth - quota.TotalUsedVolume,
+	}
+	return resp, nil
+}
+
+func (s *Service) RequestLimit(ctx context.Context, req *metadataApi.QuotaRequestLimitReq) (*metadataApi.QuotaRequestLimitResp, error) {
+	var (
+		err    error
+		userID uuid.UUID
+		quota  *repository.Quota
+		resp   *metadataApi.QuotaRequestLimitResp
+	)
+	if userID, err = uuid.Parse(req.UserID); err != nil {
+		return nil, err
+	}
+
+	if quota, err = s.db.ReturnByUserID(ctx, userID); err != nil {
+		return nil, err
+	}
+	resp = &metadataApi.QuotaRequestLimitResp{
+		Count:    quota.MaxRequestPerMinute,
+		Duration: int64(time.Minute),
 	}
 	return resp, nil
 }

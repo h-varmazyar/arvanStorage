@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type QuotaServiceClient interface {
 	Remaining(ctx context.Context, in *QuotaRemainingReq, opts ...grpc.CallOption) (*QuotaRemainingResp, error)
+	RequestLimit(ctx context.Context, in *QuotaRequestLimitReq, opts ...grpc.CallOption) (*QuotaRequestLimitResp, error)
 	UpdateUsedVolume(ctx context.Context, in *Volume, opts ...grpc.CallOption) (*api.Void, error)
 }
 
@@ -44,6 +45,15 @@ func (c *quotaServiceClient) Remaining(ctx context.Context, in *QuotaRemainingRe
 	return out, nil
 }
 
+func (c *quotaServiceClient) RequestLimit(ctx context.Context, in *QuotaRequestLimitReq, opts ...grpc.CallOption) (*QuotaRequestLimitResp, error) {
+	out := new(QuotaRequestLimitResp)
+	err := c.cc.Invoke(ctx, "/api.QuotaService/RequestLimit", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *quotaServiceClient) UpdateUsedVolume(ctx context.Context, in *Volume, opts ...grpc.CallOption) (*api.Void, error) {
 	out := new(api.Void)
 	err := c.cc.Invoke(ctx, "/api.QuotaService/UpdateUsedVolume", in, out, opts...)
@@ -58,6 +68,7 @@ func (c *quotaServiceClient) UpdateUsedVolume(ctx context.Context, in *Volume, o
 // for forward compatibility
 type QuotaServiceServer interface {
 	Remaining(context.Context, *QuotaRemainingReq) (*QuotaRemainingResp, error)
+	RequestLimit(context.Context, *QuotaRequestLimitReq) (*QuotaRequestLimitResp, error)
 	UpdateUsedVolume(context.Context, *Volume) (*api.Void, error)
 }
 
@@ -67,6 +78,9 @@ type UnimplementedQuotaServiceServer struct {
 
 func (UnimplementedQuotaServiceServer) Remaining(context.Context, *QuotaRemainingReq) (*QuotaRemainingResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Remaining not implemented")
+}
+func (UnimplementedQuotaServiceServer) RequestLimit(context.Context, *QuotaRequestLimitReq) (*QuotaRequestLimitResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RequestLimit not implemented")
 }
 func (UnimplementedQuotaServiceServer) UpdateUsedVolume(context.Context, *Volume) (*api.Void, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUsedVolume not implemented")
@@ -101,6 +115,24 @@ func _QuotaService_Remaining_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _QuotaService_RequestLimit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QuotaRequestLimitReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QuotaServiceServer).RequestLimit(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.QuotaService/RequestLimit",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QuotaServiceServer).RequestLimit(ctx, req.(*QuotaRequestLimitReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _QuotaService_UpdateUsedVolume_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Volume)
 	if err := dec(in); err != nil {
@@ -129,6 +161,10 @@ var QuotaService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Remaining",
 			Handler:    _QuotaService_Remaining_Handler,
+		},
+		{
+			MethodName: "RequestLimit",
+			Handler:    _QuotaService_RequestLimit_Handler,
 		},
 		{
 			MethodName: "UpdateUsedVolume",
