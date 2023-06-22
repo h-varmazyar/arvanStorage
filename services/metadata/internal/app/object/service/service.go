@@ -58,6 +58,7 @@ func (s *Service) NewUpload(ctx context.Context, req *metadataApi.ObjectNewUploa
 		err            error
 		userID         uuid.UUID
 		remainingQuota *metadataApi.QuotaRemainingResp
+		fileInfo       *fileCache.FileInfo
 	)
 	userID, err = uuid.Parse(req.UserID)
 	if err != nil {
@@ -71,10 +72,9 @@ func (s *Service) NewUpload(ctx context.Context, req *metadataApi.ObjectNewUploa
 		return nil, errors.New(ctx, codes.ResourceExhausted).AddDetails("insufficient volume")
 	}
 
-	uploadID := uuid.New()
-	s.fileCache.NewFile(uploadID)
+	fileInfo = s.fileCache.NewFile(ctx, req.Key)
 
-	return &metadataApi.ObjectNewUploadResp{UploadID: uploadID.String()}, nil
+	return &metadataApi.ObjectNewUploadResp{UploadID: fileInfo.UploadID.String()}, nil
 }
 
 func (s *Service) UploadPart(ctx context.Context, req *metadataApi.ObjectUploadPartReq) (*api.Void, error) {
@@ -100,7 +100,7 @@ func (s *Service) UploadPart(ctx context.Context, req *metadataApi.ObjectUploadP
 		return nil, err
 	}
 
-	uploadedInfo, err = s.fileCache.ReturnFileInfo(uploadID)
+	uploadedInfo, err = s.fileCache.ReturnFileInfo(ctx, uploadID)
 	if err == nil {
 		return nil, err
 	}
@@ -109,7 +109,7 @@ func (s *Service) UploadPart(ctx context.Context, req *metadataApi.ObjectUploadP
 		return nil, errors.New(ctx, codes.ResourceExhausted).AddDetails("insufficient volume")
 	}
 
-	if err = s.fileCache.AddPart(uploadID, []byte(req.Body)); err != nil {
+	if err = s.fileCache.AddPart(ctx, uploadID, []byte(req.Body)); err != nil {
 		return nil, err
 	}
 
@@ -134,7 +134,7 @@ func (s *Service) CompleteUpload(ctx context.Context, req *metadataApi.ObjectCom
 		return nil, err
 	}
 
-	uploadedInfo, err = s.fileCache.ReturnFileInfo(uploadID)
+	uploadedInfo, err = s.fileCache.ReturnFileInfo(ctx, uploadID)
 	if err == nil {
 		return nil, err
 	}
@@ -152,10 +152,10 @@ func (s *Service) CompleteUpload(ctx context.Context, req *metadataApi.ObjectCom
 		}
 	}
 
-	if checksum := s.fileCache.FileChecksum(uploadID); checksum != object.Checksum {
+	if checksum := s.fileCache.FileChecksum(ctx, uploadID); checksum != object.Checksum {
 		object.Checksum = checksum
 		object.Size = uploadedInfo.TotalUploadedVolume
-		s.fileCache.AsyncPersistToStorage(uploadID)
+		s.fileCache.AsyncPersistToStorage(ctx, uploadID)
 	}
 
 	if err = s.updateVolumeQuota(ctx, userID); err != nil {
@@ -169,7 +169,7 @@ func (s *Service) CompleteUpload(ctx context.Context, req *metadataApi.ObjectCom
 	return new(api.Void), nil
 }
 
-func (s *Service) AbortUpload(_ context.Context, req *metadataApi.ObjectAbortUploadReq) (*api.Void, error) {
+func (s *Service) AbortUpload(ctx context.Context, req *metadataApi.ObjectAbortUploadReq) (*api.Void, error) {
 	var (
 		err      error
 		uploadID uuid.UUID
@@ -180,7 +180,7 @@ func (s *Service) AbortUpload(_ context.Context, req *metadataApi.ObjectAbortUpl
 		return nil, err
 	}
 
-	err = s.fileCache.RemoveFile(uploadID)
+	err = s.fileCache.RemoveFile(ctx, uploadID)
 	if err == nil {
 		return nil, err
 	}

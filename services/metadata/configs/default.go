@@ -13,5 +13,8 @@ db:
   port: 5432
   name: "metadata"
   is_ssl_enable: false
+object:
+  redis_address: "localhost:6379""
+  redis_password: ""
 `)
 )

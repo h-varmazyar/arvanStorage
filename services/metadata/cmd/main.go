@@ -9,7 +9,6 @@ import (
 	"github.com/h-varmazyar/arvanStorage/services/metadata/internal/app/object"
 	"github.com/h-varmazyar/arvanStorage/services/metadata/internal/app/quota"
 	"github.com/h-varmazyar/arvanStorage/services/metadata/internal/pkg/db"
-	"github.com/h-varmazyar/arvanStorage/services/metadata/internal/pkg/fileCache"
 	gormext "github.com/h-varmazyar/gopack/gorm"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -36,9 +35,7 @@ func main() {
 		logger.Panicf("failed to initiate databases with error %v", err)
 	}
 
-	//todo: must be implemented
-	var fileCacheImp fileCache.Caching
-	initializeAndRegisterApps(ctx, logger, dbInstance, conf, fileCacheImp)
+	initializeAndRegisterApps(ctx, logger, dbInstance, conf)
 }
 
 func loadConfigs(defaultConfig bool) (*Configs, error) {
@@ -85,12 +82,12 @@ func loadDB(ctx context.Context, configs gormext.Configs) (*db.DB, error) {
 	return db.NewDatabase(ctx, configs)
 }
 
-func initializeAndRegisterApps(ctx context.Context, logger *log.Logger, dbInstance *db.DB, configs *Configs, fileCacheImp fileCache.Caching) {
+func initializeAndRegisterApps(ctx context.Context, logger *log.Logger, dbInstance *db.DB, configs *Configs) {
 	quotaApp, err := quota.NewApp(ctx, logger, dbInstance)
 	if err != nil {
 		logger.Panicf("failed to initiate quota service with error %v", err)
 	}
-	objectApp, err := object.NewApp(ctx, logger, dbInstance, quotaApp.Service, fileCacheImp)
+	objectApp, err := object.NewApp(ctx, logger, dbInstance, configs.Object, quotaApp.Service)
 	if err != nil {
 		logger.Panicf("failed to initiate object service with error %v", err)
 	}
