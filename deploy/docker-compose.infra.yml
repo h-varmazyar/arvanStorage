@@ -1,0 +1,38 @@
+version: '3.7'
+
+networks:
+  arvan:
+    external: true
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres
+    environment:
+      - POSTGRES_USER=${POSTGRES_USERNAME}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_arvan_data:/var/lib/postgresql/data
+    networks:
+      - gate
+    ports:
+      - 5432:5432
+    restart: always
+
+  redis:
+    container_name: redis
+    image: bitnami/redis:latest
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    environment:
+      - ALLOW_EMPTY_PASSWORD=no
+    volumes:
+      - redis_arvan_data:/var/lib/redis
+    networks:
+      - gate
+    ports:
+      - 6379:6379
+    restart: always
+
+volumes:
+  postgres_arvan_data:
+  redis_arvan_data:

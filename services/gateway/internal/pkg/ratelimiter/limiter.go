@@ -13,12 +13,6 @@ import (
 	"time"
 )
 
-var (
-//requestsPerMinute = 0.5
-//requestLimit      = rate.Limit(requestsPerMinute / 60) // 1 request per 2 minutes
-//burstLimit        = 1
-)
-
 type Limiter struct {
 	quotaService metadataApi.QuotaServiceClient
 	visitors     map[string]*Visitor

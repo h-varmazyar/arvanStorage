@@ -1,0 +1,36 @@
+version: '3.7'
+
+networks:
+  gate:
+    external: true
+
+services:
+  gateway:
+    container_name: gateway
+    image: gateway:${VERSION}
+    build:
+      context: ..
+      dockerfile: services/gateway/deploy/Dockerfile
+      args:
+        VERSION: ${VERSION}
+    volumes:
+      - /srv/configs/gateway/app.yaml:/app/configs/config.yaml
+    networks:
+      - arvan
+    depends_on:
+      - metadata
+    restart: always
+
+  metadata:
+    container_name: metadata
+    image: metadata:${VERSION}
+    build:
+      context: ..
+      dockerfile: services/metadata/deploy/Dockerfile
+      args:
+        VERSION: ${VERSION}
+    volumes:
+      - /srv/configs/metadata/app.yaml:/app/configs/config.yaml
+    networks:
+      - arvan
+    restart: always
